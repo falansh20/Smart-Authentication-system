@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OS Secure Authentication Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>OS SecureAuth</h1>
+        <p>Authentication Monitor</p>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#dash" class="nav-item active" data-tab="dashboard">
+          <span>📊</span> Dashboard
+        </a>
+        <a href="#auth" class="nav-item" data-tab="authentication">
+          <span>🔐</span> Authentication
+        </a>
+        <a href="#kernel" class="nav-item" data-tab="kernel">
+          <span>⚙️</span> Kernel Ops
+        </a>
+        <a href="#monitor" class="nav-item" data-tab="processes">
+          <span>🔍</span> Processes
+        </a>
+        <a href="#events" class="nav-item" data-tab="events">
+          <span>📋</span> Events Log
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <p>OS Project © 2026</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <!-- Dashboard Tab -->
+      <section class="tab-pane active" id="dashboard">
+        <div class="dashboard-header">
+          <h2>System Authentication Overview</h2>
+          <p class="tab-description">This tab lets you monitor CPU, memory, authentication throughput, and overall system health in one place.</p>
+          <div class="header-actions">
+            <button id="pauseMetrics" class="btn btn-secondary">Pause</button>
+            <button id="refreshMetrics" class="btn btn-primary">Refresh</button>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-title">CPU Usage</div>
+            <div class="metric-value" id="cpuValue">45.2%</div>
+            <div class="metric-detail">8 cores · Intel Core i7</div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="cpuFill" style="width: 45%"></div>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-title">Memory Usage</div>
+            <div class="metric-value" id="memValue">62.8%</div>
+            <div class="metric-detail">10.2 / 16 GB</div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="memFill" style="width: 62.8%"></div>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-title">Authentication Events</div>
+            <div class="metric-value" id="authEvents">1,247</div>
+            <div class="metric-detail">Last 24 hours</div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 78%; background: #4ade80;"></div>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-title">Failed Auth Attempts</div>
+            <div class="metric-value" id="failedAuth">23</div>
+            <div class="metric-detail">Blocked threats</div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 15%; background: #ff6b6b;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-container">
+          <div class="chart-card">
+            <h3>CPU Usage Trend</h3>
+            <canvas id="cpuChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3>Auth Requests Trend</h3>
+            <canvas id="authChart"></canvas>
+          </div>
+        </div>
+
+        <div class="system-info">
+          <div class="info-item">
+            <span>Active Processes</span>
+            <strong id="procCount">32</strong>
+          </div>
+          <div class="info-item">
+            <span>System Uptime</span>
+            <strong id="uptime">3d 12h 45m</strong>
+          </div>
+          <div class="info-item">
+            <span>Load Average</span>
+            <strong id="loadAvg">2.45 (1m)</strong>
+          </div>
+          <div class="info-item">
+            <span>Swap Usage</span>
+            <strong id="swapUsage">1.2 / 8 GB</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Authentication Tab -->
+      <section class="tab-pane" id="authentication">
+        <div class="dashboard-header">
+          <h2>Authentication Module</h2>
+          <p class="tab-description">Use this panel to test login flows, OTP and biometric factors, and watch how factor usage and success rates change in real time.</p>
+        </div>
+
+        <div class="auth-container">
+          <div class="auth-panel">
+            <h3>User Login</h3>
+            <form id="loginForm" class="auth-form">
+              <input id="username" type="text" placeholder="Username" />
+              <input id="password" type="password" placeholder="Password" />
+              <label class="show-password">
+                <input type="checkbox" id="showPassword" /> Show password
+              </label>
+              <div class="factor-options">
+                <label><input type="checkbox" id="otpFactor" /> OTP</label>
+                <label><input type="checkbox" id="bioFactor" /> Biometric</label>
+              </div>
+              <p class="auth-note">Tip: Enable OTP or biometric factor to strengthen authentication and see the usage reflected in the charts below.</p>
+              <p class="auth-note">Tip: Enable OTP or biometric factor to strengthen authentication and see the usage reflected in the charts below.</p>
+              <button type="submit" class="btn btn-primary">Authenticate</button>
+              <div id="authStatus" class="status-message"></div>
+            </form>
+          </div>
+
+          <div class="auth-panel">
+            <h3>Biometric Enrollment</h3>
+            <div class="form-group">
+              <input id="bioUsername" type="text" placeholder="Username" />
+              <textarea id="bioPattern" placeholder="Fingerprint pattern (8+ chars)"></textarea>
+              <button id="enrollBio" class="btn btn-primary">Enroll</button>
+              <div id="bioEnrollStatus" class="status-message"></div>
+            </div>
+          </div>
+
+          <div class="auth-panel">
+            <h3>Biometric Verification</h3>
+            <div class="form-group">
+              <input id="bioVerifyUser" type="text" placeholder="Username" />
+              <textarea id="bioVerifyPattern" placeholder="Fingerprint pattern"></textarea>
+              <label><input type="checkbox" id="livenessCheck" /> Enable Liveness Detection</label>
+              <button id="verifyBio" class="btn btn-primary">Verify</button>
+              <div id="bioVerifyStatus" class="status-message"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-visuals">
+          <div class="chart-card">
+            <h3>Auth Factor Usage</h3>
+            <canvas id="factorChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3>Recent Auth Outcomes</h3>
+            <canvas id="authStatusChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Kernel Operations Tab -->
+      <section class="tab-pane" id="kernel">
+        <div class="dashboard-header">
+          <h2>Kernel Operations</h2>
+          <p class="tab-description">Simulate ring-level control, system calls, module management, and interrupt-handling actions for the kernel.</p>
+        </div>
+
+        <div class="kernel-container">
+          <div class="kernel-card">
+            <h3>Ring Level Control</h3>
+            <div class="ring-display" id="ringDisplay">Ring 3 (User Mode)</div>
+            <button id="requestRing0" class="btn btn-primary">Request Ring 0</button>
+            <div id="ringStatus" class="status-message"></div>
+          </div>
+
+          <div class="kernel-card">
+            <h3>System Call Execution</h3>
+            <select id="syscallType">
+              <option value="auth_verify">sys_auth_verify (0x401)</option>
+              <option value="auth_enroll">sys_auth_enroll (0x402)</option>
+              <option value="mfa_challenge">sys_mfa_challenge (0x404)</option>
+            </select>
+            <input id="syscallArg" type="text" placeholder="Argument" />
+            <button id="executeSyscall" class="btn btn-primary">Execute</button>
+            <div id="syscallStatus" class="status-message"></div>
+          </div>
+
+          <div class="kernel-card">
+            <h3>Kernel Modules</h3>
+            <select id="kernelModule">
+              <option value="auth_core.ko">auth_core.ko</option>
+              <option value="mfa_handler.ko">mfa_handler.ko</option>
+              <option value="crypto_engine.ko">crypto_engine.ko</option>
+              <option value="rootkit.ko">rootkit.ko (Suspect)</option>
+            </select>
+            <div class="button-group">
+              <button id="loadModule" class="btn btn-secondary">Load</button>
+              <button id="unloadModule" class="btn btn-secondary">Unload</button>
+            </div>
+            <div id="moduleStatus" class="status-message"></div>
+          </div>
+
+          <div class="kernel-card">
+            <h3>Context Switch</h3>
+            <input id="proc1" type="text" placeholder="Process 1" value="auth_daemon" />
+            <input id="proc2" type="text" placeholder="Process 2" value="login_handler" />
+            <button id="contextSwitch" class="btn btn-primary">Switch</button>
+            <div id="switchStatus" class="status-message"></div>
+          </div>
+
+          <div class="kernel-card">
+            <h3>Interrupt Handler</h3>
+            <select id="interruptType">
+              <option value="keyboard">INT 0x21 (Keyboard)</option>
+              <option value="timer">INT 0x08 (Timer)</option>
+              <option value="io">INT 0x2E (I/O)</option>
+              <option value="fault">INT 0x0D (GP Fault)</option>
+            </select>
+            <button id="triggerInterrupt" class="btn btn-primary">Trigger</button>
+            <div id="interruptStatus" class="status-message"></div>
+          </div>
+
+          <div class="kernel-card">
+            <h3>Module List</h3>
+            <div id="moduleList" class="module-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Processes Tab -->
+      <section class="tab-pane" id="processes">
+        <div class="dashboard-header">
+          <h2>Process Monitor</h2>
+          <p class="tab-description">Track active processes, add new tasks, and monitor CPU/memory usage per process in this tab.</p>
+          <div class="header-actions">
+            <input id="processNameInput" type="text" placeholder="Process name" />
+            <button id="addProcessBtn" class="btn btn-primary">New Task</button>
+          </div>
+        </div>
+
+        <div class="processes-container">
+          <table class="processes-table">
+            <thead>
+              <tr>
+                <th>PID</th>
+                <th>Name</th>
+                <th>CPU %</th>
+                <th>Memory (MB)</th>
+                <th>Threads</th>
+                <th>Priority</th>
+                <th>State</th>
+              </tr>
+            </thead>
+            <tbody id="processList"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Events Log Tab -->
+      <section class="tab-pane" id="events">
+        <div class="dashboard-header">
+          <h2>Security Events Log</h2>
+          <p class="tab-description">Review authentication, kernel, and process events with timestamps and severity indicators.</p>
+          <button id="clearEvents" class="btn btn-secondary">Clear Log</button>
+        </div>
+
+        <div class="events-container">
+          <div id="eventsList" class="events-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
