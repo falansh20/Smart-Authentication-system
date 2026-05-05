@@ -70,7 +70,10 @@ This project highlights the concept of **defense in depth**, where multiple laye
 
 ## 📸 Screenshots
 
-<img width="313" height="485" alt="Screenshot 2026-05-05 at 9 44 27 PM" src="https://github.com/user-attachments/assets/b2a3014b-9751-486e-9602-24a9cf78ece2" />
+<img width="1708" height="902" alt="Screenshot 2026-05-05 at 9 45 09 PM" src="https://github.com/user-attachments/assets/55cb4969-aff9-42e5-9f5f-8bfa12a9123a" />
+<img width="1707" height="908" alt="Screenshot 2026-05-05 at 9 45 33 PM" src="https://github.com/user-attachments/assets/14b7f362-e308-4544-b284-ae49d2ff89bc" />
+
+
 
 
 ---
